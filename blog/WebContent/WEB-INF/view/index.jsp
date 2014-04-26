@@ -10,5 +10,6 @@
 <body>
 <h1>view index</h1>
 <a href="${pageContext.request.contextPath }/test.json">json</a>
+<img src="${pageContext.request.contextPath }/images/a.png"/>
 </body>
 </html>

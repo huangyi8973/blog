@@ -14,7 +14,6 @@ public class HomeController {
 		return new View("index.jsp");
 	}
 	
-	@At("/test.json")
 	public View test(HttpServletRequest req,HttpServletResponse resp){
 		return null;
 	}
