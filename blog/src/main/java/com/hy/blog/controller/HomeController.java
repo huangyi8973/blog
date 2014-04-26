@@ -9,8 +9,13 @@ import com.hy.core.view.View;
 @Controller
 public class HomeController {
 
-	@At("/index")
+	@At("/")
 	public View index(HttpServletRequest req, HttpServletResponse resp){
 		return new View("index.jsp");
+	}
+	
+	@At("/test.json")
+	public View test(HttpServletRequest req,HttpServletResponse resp){
+		return null;
 	}
 }
