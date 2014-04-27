@@ -11,5 +11,8 @@
 <h1>view index</h1>
 <a href="${pageContext.request.contextPath }/test.json">json</a>
 <img src="${pageContext.request.contextPath }/images/a.png"/>
+<form action="${pageContext.request.contextPath }/login/checkLogin" method="post">
+<button type="submit" value="登录">登录</button>
+</form>
 </body>
 </html>

@@ -7,8 +7,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hy.core.action.Action;
 import com.hy.core.action.ActionFactory;
-import com.hy.core.view.View;
-import com.hy.core.viewrender.JspViewRender;
+import com.hy.core.model.Model;
+import com.hy.core.modelview.ModelAndView;
+import com.hy.core.view.JsonView;
+import com.hy.core.viewrender.JsonViewRender;
+import com.hy.core.viewrender.ViewRender;
+import com.hy.core.viewrender.ViewRenderFactory;
 
 /**
  * Action处理器
@@ -36,7 +40,8 @@ public class ActionHandler extends Handler {
 		this.setHeader();
 		
 		String url = this.getRequest().getRequestURI().substring(this.getRequest().getContextPath().length());
-		Action action = ActionFactory.getInstance().getAction(url);
+		String httpMethod = this.getRequest().getMethod();
+		Action action = ActionFactory.getInstance().getAction(url,httpMethod);
 		
 		System.out.println(String.format("url:%s",url));
 		System.out.println(String.format("获得url映射:%s",action));
@@ -46,10 +51,19 @@ public class ActionHandler extends Handler {
 			Method method = action.getMethod();
 			Object result = method.invoke(controller, this.getRequest(),this.getResponse());
 			if(result != null){
-				if(result instanceof View){
+				if(result instanceof ModelAndView){
 					//返回视图
-					JspViewRender jsp = new JspViewRender(this.getRequest(), this.getResponse());
-					jsp.render((View) result);
+					ModelAndView mv = (ModelAndView) result;
+					ViewRender render = ViewRenderFactory.getInstance().createViewRender(mv.getView());
+					render.setRequest(this.getRequest());
+					render.setResponse(this.getResponse());
+					render.render(mv.getView(),mv.getModel());
+				}else{
+					//不是返回ModelAndView的，全部看成是返回json
+					ViewRender render = new JsonViewRender(this.getRequest(),this.getResponse());
+					Model model = new Model();
+					model.put(JsonView.JSON_KEY, result);
+					render.render(null, model);
 				}
 			}
 		}else{

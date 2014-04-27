@@ -5,14 +5,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hy.core.annotations.At;
 import com.hy.core.annotations.Controller;
-import com.hy.core.view.View;
+import com.hy.core.model.Model;
+import com.hy.core.modelview.ModelAndView;
+import com.hy.core.view.JspView;
 
 @Controller
 public class AdminController {
 
 	@At("/admin/index")
-	public View index(HttpServletRequest req,HttpServletResponse resp){
-		req.setAttribute("user", "jimmy");
-		return new View("admin/index.jsp");
+	public ModelAndView index(HttpServletRequest req,HttpServletResponse resp){
+		ModelAndView mv = new ModelAndView();
+		mv.setView(new  JspView("admin/index.jsp"));
+		Model model = new Model();
+		model.put("user", "jimmy");
+		mv.setModel(model);
+		return mv;
 	}
 }

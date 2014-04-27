@@ -70,6 +70,12 @@ public class ResourceHandler extends Handler {
 		out.flush();
 	}
 
+	/**
+	 * 设置文件长度和类型
+	 * @param file
+	 * @param mineType
+	 * @throws IOException
+	 */
 	private void setHander(File file, String mineType) throws IOException {
 		long length = file.length();
 		if(length > Integer.MAX_VALUE){
@@ -79,6 +85,10 @@ public class ResourceHandler extends Handler {
 		this.getResponse().setContentType(mineType);
 	}
 
+	/**
+	 * 获取资源文件
+	 * @return
+	 */
 	private File getResource() {
 		String path = this.getRequest().getServletContext().getRealPath("/");
 		//去掉context的url，连开头的"\"都去掉

@@ -1,20 +1,27 @@
 package com.hy.blog.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hy.core.annotations.At;
 import com.hy.core.annotations.Controller;
-import com.hy.core.view.View;
+import com.hy.core.modelview.ModelAndView;
+import com.hy.core.view.JspView;
 @Controller
 public class HomeController {
 
 	@At("/")
-	public View index(HttpServletRequest req, HttpServletResponse resp){
-		return new View("index.jsp");
+	public ModelAndView index(HttpServletRequest req, HttpServletResponse resp){
+		return new ModelAndView(new JspView("index.jsp"),null);
 	}
-	
-	public View test(HttpServletRequest req,HttpServletResponse resp){
-		return null;
+	@At("/test.json")
+	public List<String> test(HttpServletRequest req,HttpServletResponse resp){
+		List<String> list = new ArrayList<String>();
+		list.add("中文怎么样？");
+		list.add("def");
+		return list;
 	}
 }

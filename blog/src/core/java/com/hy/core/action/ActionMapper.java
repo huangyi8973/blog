@@ -61,8 +61,8 @@ public final class ActionMapper {
 		System.out.println(String.format("url映射初始化结束,耗时:%d",+System.currentTimeMillis() - start));
 	}
 	
-	public String getActionInfoStr(String url){
-		return this._mapper.get(url);
+	public String getActionInfoStr(String httpMethodAndUrl){
+		return this._mapper.get(httpMethodAndUrl);
 	}
 	
 	private void addClassToMapper(String filePath) throws ClassNotFoundException{
@@ -116,7 +116,7 @@ public final class ActionMapper {
 			for(Method method : methods){
 				At methodAt = method.getAnnotation(At.class);
 				if(methodAt != null){
-					String finalUrl = url+methodAt.value();
+					String finalUrl = String.format("%s#%s", methodAt.method(),url+methodAt.value());
 					this._mapper.put(finalUrl, String.format("%s#%s", className,method.getName()));
 				}
 			}

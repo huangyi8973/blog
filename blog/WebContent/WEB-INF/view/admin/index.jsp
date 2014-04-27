@@ -11,5 +11,6 @@
 <body>
 <h1>${user} admin index</h1>
 <img src="${pageContext.request.contextPath }/images/a.png"/>
+
 </body>
 </html>

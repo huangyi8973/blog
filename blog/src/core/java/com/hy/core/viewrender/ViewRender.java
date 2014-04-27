@@ -3,10 +3,11 @@ package com.hy.core.viewrender;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hy.core.model.Model;
 import com.hy.core.view.View;
 
 public abstract class ViewRender {
-
+	
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
 	
@@ -32,5 +33,7 @@ public abstract class ViewRender {
 		this.response = resp;
 	}
 	
-	public abstract void render(View view);
+	public ViewRender(){}
+	
+	public abstract void render(View view, Model model) throws Exception;
 }

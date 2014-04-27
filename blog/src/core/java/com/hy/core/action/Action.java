@@ -2,17 +2,21 @@ package com.hy.core.action;
 
 import java.lang.reflect.Method;
 
+import com.hy.core.pub.HttpMethod;
+
 public class Action {
 
 	private String _url;
 	private Class<?> _controllerCls;
 	private Method _method;
+	private HttpMethod _httpMethod;
 	
-	public Action(String url, Class<?> controllerCls, Method method) {
+	public Action(String url, Class<?> controllerCls, Method method,HttpMethod httpMethod) {
 		super();
 		this._url = url;
 		this._controllerCls = controllerCls;
 		this._method = method;
+		this._httpMethod = httpMethod;
 	}
 
 	public String getUrl() {
@@ -42,8 +46,8 @@ public class Action {
 	@Override
 	public String toString() {
 		return "Action [_url=" + _url + ", _controllerCls=" + _controllerCls
-				+ ", _method=" + _method + "]";
+				+ ", _method=" + _method + ", _httpMethod=" + _httpMethod + "]";
 	}
-	
+
 	
 }
