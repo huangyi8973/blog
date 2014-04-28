@@ -3,22 +3,18 @@ package com.hy.core.controller;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hy.core.action.Action;
-import com.hy.core.action.ActionFactory;
 import com.hy.core.action.ActionMapper;
+import com.hy.core.config.JHelloConfig;
 import com.hy.core.handle.ActionHandler;
 import com.hy.core.handle.Handler;
 import com.hy.core.handle.ResourceHandler;
 import com.hy.core.utils.Utils;
-import com.hy.core.view.View;
-import com.hy.core.viewrender.JspViewRender;
 
 public class DispatchController extends HttpServlet {
 	
@@ -31,13 +27,6 @@ public class DispatchController extends HttpServlet {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private Class<?>[] getHandle(){
-		return new Class<?>[]{
-				ActionHandler.class,
-				ResourceHandler.class
-		};
 	}
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
@@ -64,7 +53,7 @@ public class DispatchController extends HttpServlet {
 	 */
 	private Handler prepareHandleChain(HttpServletRequest req, HttpServletResponse resp) 
 			throws NoSuchMethodException, SecurityException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
-		Class<?>[] handleCls = getHandle();
+		Class<?>[] handleCls =JHelloConfig.getHandles();
 		Handler firstHandle = null;
 		if(!Utils.isEmplyOrNull(handleCls)){
 			Handler lastHandle = null;

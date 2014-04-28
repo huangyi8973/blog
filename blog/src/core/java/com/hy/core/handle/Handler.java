@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class Handler {
 
+	
 	protected Handler _nextHandle;
 	protected HttpServletRequest _request;
 	protected HttpServletResponse _response;

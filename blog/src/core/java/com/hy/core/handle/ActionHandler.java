@@ -5,6 +5,9 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hy.core.action.Action;
 import com.hy.core.action.ActionFactory;
 import com.hy.core.model.Model;
@@ -21,6 +24,8 @@ import com.hy.core.viewrender.ViewRenderFactory;
  */
 public class ActionHandler extends Handler {
 
+	private final static Logger logger = LoggerFactory.getLogger(ActionHandler.class);
+	
 	public ActionHandler(HttpServletRequest req, HttpServletResponse resp) {
 		super(req, resp);
 	}
@@ -36,15 +41,15 @@ public class ActionHandler extends Handler {
 
 	@Override
 	public void handle() throws Exception {
-		System.out.println("============ActionHandle");
+		logger.debug("============ActionHandle");
 		this.setHeader();
 		
 		String url = this.getRequest().getRequestURI().substring(this.getRequest().getContextPath().length());
 		String httpMethod = this.getRequest().getMethod();
 		Action action = ActionFactory.getInstance().getAction(url,httpMethod);
 		
-		System.out.println(String.format("url:%s",url));
-		System.out.println(String.format("获得url映射:%s",action));
+		logger.debug(String.format("url:%s",url));
+		logger.debug(String.format("获得url映射:%s",action));
 		
 		if(action != null){
 			Object controller = action.getControllerCls().newInstance();

@@ -6,12 +6,17 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hy.core.model.Model;
 import com.hy.core.view.JspView;
 import com.hy.core.view.View;
 
 public class JspViewRender extends ViewRender {
 
+	private final static Logger logger = LoggerFactory.getLogger(JspViewRender.class);
+	
 	public JspViewRender(HttpServletRequest req, HttpServletResponse resp) {
 		super(req, resp);
 	}

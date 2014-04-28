@@ -9,6 +9,9 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hy.core.pub.HttpConst;
 
 /**
@@ -18,13 +21,15 @@ import com.hy.core.pub.HttpConst;
  */
 public class ResourceHandler extends Handler {
 
+	private final static Logger logger = LoggerFactory.getLogger(ResourceHandler.class);
+	
 	public ResourceHandler(HttpServletRequest req, HttpServletResponse resp) {
 		super(req, resp);
 	}
 
 	@Override
 	public void handle() throws Exception {
-		System.out.println("============ResourceHandle");
+		logger.debug("============ResourceHandle");
 		//检查文件是否存在
 		File file = getResource();
 		if(file != null){
@@ -50,7 +55,7 @@ public class ResourceHandler extends Handler {
 			//这里对文件最后修改时间进行计算是为了把时间弄到秒，太小的单位没意义
 			if(ifModifiedSince >= (fileLastModify / 1000 * 1000)){
 				this.getResponse().setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-				System.out.println("resouse not modify ,response 304");
+				logger.debug("resouse not modify ,response 304");
 			}else{
 				this.getResponse().setDateHeader(HttpConst.HEADER_LAST_MODIFIED, fileLastModify);
 				return true;

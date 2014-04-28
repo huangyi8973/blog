@@ -34,11 +34,15 @@ public class JsonViewRender extends ViewRender {
 			this.getResponse().setHeader("Cache-Control", "no-cache");
 			String userAgent = this.getRequest().getHeader("User-Agent");
 			// 处理IE返回json跳出下载框
+			String mimeType = null;
 			if(userAgent.contains("MSIE")){
-				this.getResponse().setContentType("text/html;charset=utf-8");
+				mimeType = "text/html";
+//				this.getResponse().setContentType("text/html;charset=utf-8");
 			}else{
-				this.getResponse().setContentType("application/json;charset=utf-8");
+				mimeType = "application/json";
+//				this.getResponse().setContentType("application/json;charset=utf-8");
 			}
+			this.getResponse().setContentType(mimeType);
 			//输出
 			PrintWriter pw = this.getResponse().getWriter();
 			pw.write(result);

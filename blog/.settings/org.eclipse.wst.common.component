@@ -2,9 +2,9 @@
     <wb-module deploy-name="blog">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes/core" source-path="/src/core/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/core/java"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
         <property name="context-root" value="blog"/>
         <property name="java-output-path" value="/blog/build/classes"/>
     </wb-module>

@@ -10,11 +10,18 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hy.core.annotations.At;
 import com.hy.core.annotations.Controller;
 
 public final class ActionMapper {
 
+	private final static Logger logger = LoggerFactory.getLogger(ActionMapper.class);
 	private static ActionMapper _instance;
 	private static Object _lock = new Object();
 	/**
@@ -49,7 +56,7 @@ public final class ActionMapper {
 	}
 	
 	public void init() throws IOException, ClassNotFoundException{
-		System.out.println("url映射初始化开始");
+		logger.debug("url映射初始化开始");
 		long start = System.currentTimeMillis();
 		String packagePath = getScanPackagePath().replace('.', File.separatorChar);
 		Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(packagePath);
@@ -58,7 +65,7 @@ public final class ActionMapper {
 			String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
 			addClassToMapper(filePath);
 		}
-		System.out.println(String.format("url映射初始化结束,耗时:%d",+System.currentTimeMillis() - start));
+		logger.debug(String.format("url映射初始化结束,耗时:%dms",+System.currentTimeMillis() - start));
 	}
 	
 	public String getActionInfoStr(String httpMethodAndUrl){
