@@ -22,6 +22,7 @@ public class HomeController {
 		List<String> list = new ArrayList<String>();
 		list.add("中文怎么样？");
 		list.add("def");
+		int d = 1/0;
 		return list;
 	}
 }
