@@ -1,4 +1,4 @@
-package com.hy.core.annotations;
+package com.hy.core.annotations.web;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -29,7 +29,11 @@ public class ExceptionHandler extends Handler {
 		}catch(Throwable e){
 			logger.error(e.getMessage(), e);
 			//写到页面上
-			this.getResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getCause().toString());
+			if(e.getCause() != null){
+				this.getResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getCause().toString());
+			}else{
+				this.getResponse().sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,e.toString());
+			}
 		}
 	}
 

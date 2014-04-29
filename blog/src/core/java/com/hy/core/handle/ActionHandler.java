@@ -10,8 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import com.hy.core.action.Action;
 import com.hy.core.action.ActionFactory;
+import com.hy.core.aspect.AdviceFactory;
+import com.hy.core.aspect.Pointcut;
 import com.hy.core.model.Model;
 import com.hy.core.modelview.ModelAndView;
+import com.hy.core.utils.Utils;
 import com.hy.core.view.JsonView;
 import com.hy.core.viewrender.JsonViewRender;
 import com.hy.core.viewrender.ViewRender;
@@ -54,6 +57,7 @@ public class ActionHandler extends Handler {
 		if(action != null){
 			Object controller = action.getControllerCls().newInstance();
 			Method method = action.getMethod();
+			executeBeforeAdvice(action);
 			Object result = method.invoke(controller, this.getRequest(),this.getResponse());
 			if(result != null){
 				if(result instanceof ModelAndView){
@@ -73,6 +77,19 @@ public class ActionHandler extends Handler {
 			}
 		}else{
 			this.nextHandle();
+		}
+	}
+
+
+	private void executeBeforeAdvice(Action action) throws Exception {
+		Pointcut[] pointcuts = AdviceFactory.getInstance().getBeforeAdvicesByAction(action);
+		if(!Utils.isEmplyOrNull(pointcuts)){
+			for(Pointcut pointcut : pointcuts){
+				Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(pointcut.getAdviceClsName());
+				Method method = cls.getMethod(pointcut.getAdviceMethodName(), Pointcut.class,HttpServletRequest.class,HttpServletResponse.class);
+				Object obj = cls.newInstance();
+				method.invoke(obj, pointcut,this.getRequest(),this.getResponse());
+			}
 		}
 	}
 

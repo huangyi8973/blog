@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hy.core.action.ActionMapper;
+import com.hy.core.aspect.AdviceMapper;
 import com.hy.core.config.JHelloConfig;
 import com.hy.core.handle.ActionHandler;
 import com.hy.core.handle.Handler;
@@ -21,12 +22,17 @@ public class DispatchController extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		try {
-			initMapper();
+			initHandlesMapper();
+			initAspectMapper();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	private void initAspectMapper() throws ClassNotFoundException, IOException {
+		AdviceMapper.getInstance().init();
+		
 	}
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
@@ -86,7 +92,7 @@ public class DispatchController extends HttpServlet {
 	 * @throws IOException 
 	 * @throws ClassNotFoundException 
 	 */
-	public void initMapper() throws IOException, ClassNotFoundException {
+	public void initHandlesMapper() throws IOException, ClassNotFoundException {
 		ActionMapper.getInstance().init();
 	}
 

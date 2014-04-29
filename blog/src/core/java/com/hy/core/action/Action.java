@@ -10,14 +10,27 @@ public class Action {
 	private Class<?> _controllerCls;
 	private Method _method;
 	private HttpMethod _httpMethod;
+	private String _clsAndMethod;
 	
-	public Action(String url, Class<?> controllerCls, Method method,HttpMethod httpMethod) {
+	public Action(String url, Class<?> controllerCls, Method method,HttpMethod httpMethod,String clsAndMethod) {
 		super();
 		this._url = url;
 		this._controllerCls = controllerCls;
 		this._method = method;
 		this._httpMethod = httpMethod;
+		this._clsAndMethod = clsAndMethod;
 	}
+
+	
+	public String getClsAndMethod() {
+		return _clsAndMethod;
+	}
+
+
+	public void setClsAndMethod(String _clsAndMethod) {
+		this._clsAndMethod = _clsAndMethod;
+	}
+
 
 	public String getUrl() {
 		return _url;
@@ -43,11 +56,13 @@ public class Action {
 		this._method = method;
 	}
 
+
 	@Override
 	public String toString() {
-		return "Action [_url=" + _url + ", _controllerCls=" + _controllerCls
-				+ ", _method=" + _method + ", _httpMethod=" + _httpMethod + "]";
+		return "Action [_url=" + _url + ", _httpMethod=" + _httpMethod
+				+ ", _clsAndMethod=" + _clsAndMethod + "]";
 	}
+
 
 	
 }

@@ -3,8 +3,8 @@ package com.hy.blog.controller.admin;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hy.core.annotations.At;
-import com.hy.core.annotations.Controller;
+import com.hy.core.annotations.web.At;
+import com.hy.core.annotations.web.Controller;
 import com.hy.core.model.Model;
 import com.hy.core.modelview.ModelAndView;
 import com.hy.core.view.JspView;

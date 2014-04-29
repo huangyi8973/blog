@@ -1,4 +1,4 @@
-package com.hy.core.action;
+package com.hy.core.aspect;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -10,44 +10,52 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-
-
-
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.hy.core.action.ActionMapper;
+import com.hy.core.annotations.aspect.AfterAdvice;
+import com.hy.core.annotations.aspect.Aspect;
+import com.hy.core.annotations.aspect.BeforeAdvice;
 import com.hy.core.annotations.web.At;
 import com.hy.core.annotations.web.Controller;
 import com.hy.core.config.JHelloConfig;
 
-public final class ActionMapper {
+public class AdviceMapper {
 
-	private final static Logger logger = LoggerFactory.getLogger(ActionMapper.class);
-	private static ActionMapper _instance;
+	private final static Logger logger = LoggerFactory.getLogger(AdviceMapper.class);
+	private static AdviceMapper _instance;
 	private static Object _lock = new Object();
 	/**
-	 * map<url,类#方法>
+	 * map<joinPointPartten,类名#方法名>
 	 */
-	private Map<String,String> _mapper = new HashMap<String,String>();
+	private Map<String,String> _beforeMapper = new HashMap<String,String>();
+	private Map<String,String> _afterMapper = new HashMap<String,String>();
+	
+	public Map<String,String> getBeforeAdviceParttenAndInfoMap(){
+		return this._beforeMapper;
+	}
+	public Map<String,String> getAfterAdviceParttenAndInfoMap(){
+		return this._afterMapper;
+	}
+	
 	/**
 	 * controller包扫描路径
 	 */
-	private String _scanPackagePath = JHelloConfig.getActionScanPackage();
+	private String _scanPackagePath = JHelloConfig.getAspectScanPackage();
 	
 	
 	public String getScanPackagePath() {
 		return _scanPackagePath;
 	}
 
-	private ActionMapper(){}
+	private AdviceMapper(){}
 	
-	public static ActionMapper getInstance(){
+	public static AdviceMapper getInstance(){
 		if(_instance == null){
 			synchronized (_lock) {
 				if(_instance == null){
-					_instance = new ActionMapper();
+					_instance = new AdviceMapper();
 				}
 			}
 		}
@@ -55,7 +63,7 @@ public final class ActionMapper {
 	}
 	
 	public void init() throws IOException, ClassNotFoundException{
-		logger.debug("url映射初始化开始");
+		logger.debug("aspect mapper init");
 		long start = System.currentTimeMillis();
 		String packagePath = getScanPackagePath().replace('.', File.separatorChar);
 		Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(packagePath);
@@ -64,11 +72,7 @@ public final class ActionMapper {
 			String filePath = URLDecoder.decode(url.getFile(), "UTF-8");
 			addClassToMapper(filePath);
 		}
-		logger.debug(String.format("url映射初始化结束,耗时:%dms",+System.currentTimeMillis() - start));
-	}
-	
-	public String getActionInfoStr(String httpMethodAndUrl){
-		return this._mapper.get(httpMethodAndUrl);
+		logger.debug(String.format("aspect mapper end, spend:%dms",+System.currentTimeMillis() - start));
 	}
 	
 	private void addClassToMapper(String filePath) throws ClassNotFoundException{
@@ -109,21 +113,21 @@ public final class ActionMapper {
 		className = className.substring(0,className.length() - 6);
 		Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(className);
 		//获取注解
-		Controller controller = (Controller) cls.getAnnotation(Controller.class);
-		if(controller != null){
-			//尝试获取类上面的URL
-			At at = (At) cls.getAnnotation(At.class);
-			String url = "";
-			if(at != null){
-				url+=at.value();
-			}
-			//获取方法里的url映射
-			Method[] methods = cls.getMethods();
+		Aspect aspect = (Aspect) cls.getAnnotation(Aspect.class);
+		if(aspect != null){
+			// 获取通知
+			Method[] methods = cls.getDeclaredMethods();
 			for(Method method : methods){
-				At methodAt = method.getAnnotation(At.class);
-				if(methodAt != null){
-					String finalUrl = String.format("%s#%s", methodAt.method(),url+methodAt.value());
-					this._mapper.put(finalUrl, String.format("%s#%s", className,method.getName()));
+				AfterAdvice after =  method.getAnnotation(AfterAdvice.class);
+				if(after != null){
+					logger.debug(String.format("AfterAdvice found %s#%s, pattern : %s", className,method.getName(),after.value()));
+					this._afterMapper.put(after.value(), String.format("%s#%s", className,method.getName()));
+				}
+				
+				BeforeAdvice before =  method.getAnnotation(BeforeAdvice.class);
+				if(before != null){
+					logger.debug(String.format("BeforeAdvice found %s#%s, pattern：%s", className,method.getName(),before.value()));
+					this._beforeMapper.put(before.value(), String.format("%s#%s", className,method.getName()));
 				}
 			}
 		}

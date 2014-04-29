@@ -6,8 +6,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hy.core.annotations.At;
-import com.hy.core.annotations.Controller;
+import com.hy.core.annotations.web.At;
+import com.hy.core.annotations.web.Controller;
 import com.hy.core.modelview.ModelAndView;
 import com.hy.core.view.JspView;
 @Controller
@@ -22,7 +22,6 @@ public class HomeController {
 		List<String> list = new ArrayList<String>();
 		list.add("中文怎么样？");
 		list.add("def");
-		int d = 1/0;
 		return list;
 	}
 }

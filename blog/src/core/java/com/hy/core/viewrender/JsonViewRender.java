@@ -37,10 +37,8 @@ public class JsonViewRender extends ViewRender {
 			String mimeType = null;
 			if(userAgent.contains("MSIE")){
 				mimeType = "text/html";
-//				this.getResponse().setContentType("text/html;charset=utf-8");
 			}else{
 				mimeType = "application/json";
-//				this.getResponse().setContentType("application/json;charset=utf-8");
 			}
 			this.getResponse().setContentType(mimeType);
 			//输出

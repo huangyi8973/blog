@@ -31,7 +31,7 @@ public final class ActionFactory {
 			Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(rs[0]);
 			Method method = cls.getMethod(rs[1], HttpServletRequest.class,HttpServletResponse.class);
 			HttpMethod httpMethod = Enum.valueOf(HttpMethod.class, strHttpMethod);
-			return new Action(url, cls, method,httpMethod);
+			return new Action(url, cls, method,httpMethod,actionInfoStr);
 		}
 		return null;
 	}
