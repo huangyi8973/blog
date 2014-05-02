@@ -1,6 +1,10 @@
 package com.hy.core.handle;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,7 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import com.hy.core.action.Action;
 import com.hy.core.action.ActionFactory;
+import com.hy.core.aspect.AbstractAdvice;
 import com.hy.core.aspect.AdviceFactory;
+import com.hy.core.aspect.AdviceMapper;
 import com.hy.core.aspect.Pointcut;
 import com.hy.core.model.Model;
 import com.hy.core.modelview.ModelAndView;
@@ -28,6 +34,9 @@ import com.hy.core.viewrender.ViewRenderFactory;
 public class ActionHandler extends Handler {
 
 	private final static Logger logger = LoggerFactory.getLogger(ActionHandler.class);
+	
+	//Map<切面类名，切面实例>
+	private Map<String,AbstractAdvice> _adviceClsNameAndInstanceMap;
 	
 	public ActionHandler(HttpServletRequest req, HttpServletResponse resp) {
 		super(req, resp);
@@ -57,8 +66,14 @@ public class ActionHandler extends Handler {
 		if(action != null){
 			Object controller = action.getControllerCls().newInstance();
 			Method method = action.getMethod();
+			//实例化切面类
+			prepareAdvice();
+			//调用before方法
 			executeBeforeAdvice(action);
+			//调用action
 			Object result = method.invoke(controller, this.getRequest(),this.getResponse());
+			//调用after方法
+			executeAfterAdvice(action);
 			if(result != null){
 				if(result instanceof ModelAndView){
 					//返回视图
@@ -81,17 +96,40 @@ public class ActionHandler extends Handler {
 	}
 
 
-	private void executeBeforeAdvice(Action action) throws Exception {
-		Pointcut[] pointcuts = AdviceFactory.getInstance().getBeforeAdvicesByAction(action);
-		if(!Utils.isEmplyOrNull(pointcuts)){
-			for(Pointcut pointcut : pointcuts){
-				Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(pointcut.getAdviceClsName());
-				Method method = cls.getMethod(pointcut.getAdviceMethodName(), Pointcut.class,HttpServletRequest.class,HttpServletResponse.class);
-				Object obj = cls.newInstance();
-				method.invoke(obj, pointcut,this.getRequest(),this.getResponse());
-			}
+	
+	
+	private void prepareAdvice() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+		this._adviceClsNameAndInstanceMap = new HashMap<String, AbstractAdvice>();
+		Map<String,String> adviceInfoMap = AdviceMapper.getInstance().getAdviceParttenAndInfoMap();
+		for(Entry<String, String> entry : adviceInfoMap.entrySet()){
+			Class<?> cls =Thread.currentThread().getContextClassLoader().loadClass(entry.getValue());
+			AbstractAdvice adviceInstance = (AbstractAdvice) cls.newInstance();
+			this._adviceClsNameAndInstanceMap.put(entry.getValue(), adviceInstance);
 		}
 	}
 
 
+	private void executeBeforeAdvice(Action action) throws Exception {
+		Pointcut[] pointcuts = AdviceFactory.getInstance().getBeforeAdvicesByAction(action);
+		executeAdvice(pointcuts);
+	}
+
+	private void executeAfterAdvice(Action action) throws Exception {
+		Pointcut[] pointcuts = AdviceFactory.getInstance().getAfterAdvicesByAction(action);
+		executeAdvice(pointcuts);
+	}
+
+
+	private void executeAdvice(Pointcut[] pointcuts)
+			throws ClassNotFoundException, NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException {
+		if(!Utils.isEmplyOrNull(pointcuts)){
+			for(Pointcut pointcut : pointcuts){
+				Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(pointcut.getAdviceClsName());
+				Method method = cls.getMethod(pointcut.getAdviceMethodName(), Pointcut.class,HttpServletRequest.class,HttpServletResponse.class);
+				Object obj = this._adviceClsNameAndInstanceMap.get(pointcut.getAdviceClsName());
+				method.invoke(obj, pointcut,this.getRequest(),this.getResponse());
+			}
+		}
+	}
 }

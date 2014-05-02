@@ -24,13 +24,11 @@ public class DispatchController extends HttpServlet {
 		try {
 			initHandlesMapper();
 			initAspectMapper();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	private void initAspectMapper() throws ClassNotFoundException, IOException {
+	private void initAspectMapper() throws Exception {
 		AdviceMapper.getInstance().init();
 		
 	}

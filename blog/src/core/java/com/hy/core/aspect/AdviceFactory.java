@@ -25,17 +25,26 @@ public class AdviceFactory {
 	}
 
 	public Pointcut[] getBeforeAdvicesByAction(Action action) {
-		Map<String,String> map = AdviceMapper.getInstance().getBeforeAdviceParttenAndInfoMap();
+		Map<String,String> map = AdviceMapper.getInstance().getAdviceParttenAndInfoMap();
+		return getAdvice(action, map, "before");
+	}
+	
+	public Pointcut[] getAfterAdvicesByAction(Action action) {
+		Map<String,String> map = AdviceMapper.getInstance().getAdviceParttenAndInfoMap();
+		return getAdvice(action, map, "after");
+	}
+
+	private Pointcut[] getAdvice(Action action, Map<String, String> map,
+			String methodName) {
 		List<Pointcut> list = new ArrayList<Pointcut>();
 		for(String pattern : map.keySet()){
 			if(action.getClsAndMethod().matches(pattern)){
 				String[] targetInfo = action.getClsAndMethod().split("#");
-				String[] adviceInfo = map.get(pattern).split("#");
-				Pointcut pointcut = new Pointcut(targetInfo[0],targetInfo[1],adviceInfo[0],adviceInfo[1]);
+				String adviceClsName = map.get(pattern);
+				Pointcut pointcut = new Pointcut(targetInfo[0],targetInfo[1],adviceClsName,methodName);
 				list.add(pointcut);
 			}
 		}
 		return list.toArray(new Pointcut[0]);
 	}
-	
 }

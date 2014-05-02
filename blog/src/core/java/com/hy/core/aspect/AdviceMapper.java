@@ -3,7 +3,6 @@ package com.hy.core.aspect;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -13,12 +12,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hy.core.action.ActionMapper;
-import com.hy.core.annotations.aspect.AfterAdvice;
 import com.hy.core.annotations.aspect.Aspect;
-import com.hy.core.annotations.aspect.BeforeAdvice;
-import com.hy.core.annotations.web.At;
-import com.hy.core.annotations.web.Controller;
 import com.hy.core.config.JHelloConfig;
 
 public class AdviceMapper {
@@ -27,18 +21,13 @@ public class AdviceMapper {
 	private static AdviceMapper _instance;
 	private static Object _lock = new Object();
 	/**
-	 * map<joinPointPartten,类名#方法名>
+	 * map<joinPointPartten,类名>
 	 */
-	private Map<String,String> _beforeMapper = new HashMap<String,String>();
-	private Map<String,String> _afterMapper = new HashMap<String,String>();
+	private Map<String,String> _adviceMapper = new HashMap<String, String>();
 	
-	public Map<String,String> getBeforeAdviceParttenAndInfoMap(){
-		return this._beforeMapper;
+	public Map<String,String> getAdviceParttenAndInfoMap(){
+		return this._adviceMapper;
 	}
-	public Map<String,String> getAfterAdviceParttenAndInfoMap(){
-		return this._afterMapper;
-	}
-	
 	/**
 	 * controller包扫描路径
 	 */
@@ -62,7 +51,7 @@ public class AdviceMapper {
 		return _instance;
 	}
 	
-	public void init() throws IOException, ClassNotFoundException{
+	public void init() throws IOException, ClassNotFoundException, NoSuchMethodException, SecurityException{
 		logger.debug("aspect mapper init");
 		long start = System.currentTimeMillis();
 		String packagePath = getScanPackagePath().replace('.', File.separatorChar);
@@ -75,7 +64,7 @@ public class AdviceMapper {
 		logger.debug(String.format("aspect mapper end, spend:%dms",+System.currentTimeMillis() - start));
 	}
 	
-	private void addClassToMapper(String filePath) throws ClassNotFoundException{
+	private void addClassToMapper(String filePath) throws ClassNotFoundException, NoSuchMethodException, SecurityException{
 		File dir = new File(filePath);
 		if(!dir.exists() && !dir.isDirectory()){
 			return;
@@ -104,8 +93,10 @@ public class AdviceMapper {
 	 * 映射
 	 * @param file
 	 * @throws ClassNotFoundException
+	 * @throws SecurityException 
+	 * @throws NoSuchMethodException 
 	 */
-	private void Mapping(File file) throws ClassNotFoundException {
+	private void Mapping(File file) throws ClassNotFoundException, NoSuchMethodException, SecurityException {
 		String rootPath = getScanPackagePath().replace('.', File.separatorChar);
 		//获取类
 		String className = file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(rootPath)).replace(File.separatorChar, '.');
@@ -116,20 +107,7 @@ public class AdviceMapper {
 		Aspect aspect = (Aspect) cls.getAnnotation(Aspect.class);
 		if(aspect != null){
 			// 获取通知
-			Method[] methods = cls.getDeclaredMethods();
-			for(Method method : methods){
-				AfterAdvice after =  method.getAnnotation(AfterAdvice.class);
-				if(after != null){
-					logger.debug(String.format("AfterAdvice found %s#%s, pattern : %s", className,method.getName(),after.value()));
-					this._afterMapper.put(after.value(), String.format("%s#%s", className,method.getName()));
-				}
-				
-				BeforeAdvice before =  method.getAnnotation(BeforeAdvice.class);
-				if(before != null){
-					logger.debug(String.format("BeforeAdvice found %s#%s, pattern：%s", className,method.getName(),before.value()));
-					this._beforeMapper.put(before.value(), String.format("%s#%s", className,method.getName()));
-				}
-			}
+			this._adviceMapper.put(aspect.joincutExpression(), className);
 		}
 	}
 }
