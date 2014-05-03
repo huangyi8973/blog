@@ -29,4 +29,10 @@ public interface IBaseVO {
 	 * @date 2012-11-18 下午1:02:11
 	 */
 	String getPrimaryKeyValue();
+	
+	/**
+	 * 主键生成策略
+	 * @return
+	 */
+	PrimaryKeyStrategy getPrimaryKeyStrategy();
 }

@@ -1,7 +1,6 @@
 package com.hy.blog.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hy.core.annotations.web.At;
 import com.hy.core.annotations.web.Controller;
-import com.hy.core.db.BaseDao;
-import com.hy.core.db.result.ColumnListResultProcessor;
 import com.hy.core.modelview.ModelAndView;
 import com.hy.core.view.JspView;
 @Controller
@@ -18,11 +15,6 @@ public class HomeController {
 
 	@At("/")
 	public ModelAndView index(HttpServletRequest req, HttpServletResponse resp) throws Exception{
-		BaseDao dao = new BaseDao();
-		List<String> list = (List<String>) dao.execute("select name from blog_category", null, new ColumnListResultProcessor<String>("name"));
-		System.out.println(list);
-		List<Date> list2 = (List<Date>) dao.execute("select ts from blog_category", null, new ColumnListResultProcessor<Date>("ts"));
-		System.out.println(list2);
 		return new ModelAndView(new JspView("index.jsp"),null);
 	}
 	@At("/test.json")

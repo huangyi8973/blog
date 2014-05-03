@@ -113,7 +113,7 @@ public class BaseDao {
 		return value;
 	}
 
-	private Connection getConnection() throws SQLException {
+	protected Connection getConnection() throws SQLException {
 		return DataSourceHolder.getDataSource().getConnection();
 	}
 
