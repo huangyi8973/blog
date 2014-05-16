@@ -28,5 +28,6 @@ public class PrimaryKeyGenerater {
 		}
 		System.out.println(set);
 	}
+	
 }
 
