@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import com.hy.core.handle.ActionHandler;
 import com.hy.core.handle.ExceptionHandler;
+import com.hy.core.handle.ParamPrepareHandler;
 import com.hy.core.handle.ResourceHandler;
 
 public class JHelloConfig {
@@ -29,6 +30,7 @@ public class JHelloConfig {
 	public static Class<?>[] getHandles(){
 		return new Class<?>[]{
 				ExceptionHandler.class,
+				ParamPrepareHandler.class,
 				ActionHandler.class,
 				ResourceHandler.class
 		};
