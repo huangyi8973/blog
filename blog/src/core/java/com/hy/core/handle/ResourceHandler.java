@@ -98,7 +98,7 @@ public class ResourceHandler extends Handler {
 		String path = this.getRequest().getServletContext().getRealPath("/");
 		//去掉context的url，连开头的"\"都去掉
 		String url = this.getRequest().getRequestURI().substring(this.getRequest().getContextPath().length()+1);
-		url = url.replace('/', '\\');
+		url = url.replace("/", File.separator);
 		logger.debug("resource path:"+path);
 		logger.debug("resource request url:"+url);
 		File file = new File(path + url);

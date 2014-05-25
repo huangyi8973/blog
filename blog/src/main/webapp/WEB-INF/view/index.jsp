@@ -6,13 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Insert title here</title>
+<script type="text/javascript" src="${ctx }/js/test.js"></script>
+<link rel="stylesheet" type="text/css" href="${ctx }/css/test.css"/>
 </head>
 <body>
 <h1>view index</h1>
-<a href="${pageContext.request.contextPath }/test.json">json</a>
-<img src="${pageContext.request.contextPath }/images/a.png"/>
-<form action="${pageContext.request.contextPath }/login/checkLogin" method="post">
-<button type="submit" value="登录">登录</button>
-</form>
+<script type="text/javascript">
+hello();
+</script>
 </body>
 </html>
