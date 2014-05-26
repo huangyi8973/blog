@@ -10,6 +10,6 @@ import com.hy.core.pub.HttpMethod;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD,ElementType.TYPE})
 public @interface At {
-	String value();
+	String value() default "";
 	HttpMethod method() default HttpMethod.GET;
 }
