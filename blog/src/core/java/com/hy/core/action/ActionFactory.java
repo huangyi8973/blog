@@ -29,7 +29,14 @@ public final class ActionFactory {
 		if(actionInfoStr != null){
 			String[] rs = actionInfoStr.split("#");
 			Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(rs[0]);
-			Method method = cls.getMethod(rs[1], HttpServletRequest.class,HttpServletResponse.class);
+			//这里不考虑方法重载
+			Method method = null;
+			for(Method m : cls.getMethods()){
+				if(m.getName().equals(rs[1])){
+					method = m;
+					break;
+				}
+			}
 			HttpMethod httpMethod = Enum.valueOf(HttpMethod.class, strHttpMethod);
 			return new Action(url, cls, method,httpMethod,actionInfoStr);
 		}

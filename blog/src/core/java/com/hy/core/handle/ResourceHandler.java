@@ -40,6 +40,8 @@ public class ResourceHandler extends Handler {
 			if(checkIsModify(file)){
 				writeContent(file);
 			}
+		}else{
+			this.getResponse().setStatus(HttpServletResponse.SC_NOT_FOUND);
 		}
 	}
 
@@ -105,6 +107,7 @@ public class ResourceHandler extends Handler {
 		if(file != null && file.exists() && file.isFile() && file.canRead()){
 			return file;
 		}
+		logger.debug(String.format("file not found!  --%s", url));
 		return null;
 	}
 

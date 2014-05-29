@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import com.hy.core.action.Action;
 import com.hy.core.action.ActionFactory;
+import com.hy.core.action.ActionInvoker;
+import com.hy.core.action.Params;
 import com.hy.core.aspect.AbstractAdvice;
 import com.hy.core.aspect.AdviceFactory;
 import com.hy.core.aspect.AdviceMapper;
@@ -53,25 +55,23 @@ public class ActionHandler extends Handler {
 
 	@Override
 	public void handle() throws Exception {
-		logger.debug("============ActionHandle");
 		this.setHeader();
 		
 		String url = this.getRequest().getRequestURI().substring(this.getRequest().getContextPath().length());
 		String httpMethod = this.getRequest().getMethod();
 		Action action = ActionFactory.getInstance().getAction(url,httpMethod);
 		
-		logger.debug(String.format("url:%s",url));
-		logger.debug(String.format("获得url映射:%s",action));
-		
 		if(action != null){
-			Object controller = action.getControllerCls().newInstance();
-			Method method = action.getMethod();
+			logger.debug(String.format("url:%s",action.getUrl()));
+			logger.debug(String.format("params:%s", this.getRequest().getQueryString()));
+			logger.debug(String.format("获得url映射:%s",action));
+			action.setParams((Params)this.getRequest().getAttribute("params"));
 			//实例化切面类
 			prepareAdvice();
 			//调用before方法
 			executeBeforeAdvice(action);
 			//调用action
-			Object result = method.invoke(controller, this.getRequest(),this.getResponse());
+			Object result = new ActionInvoker(action).invoke();
 			//调用after方法
 			executeAfterAdvice(action);
 			if(result != null){

@@ -11,9 +11,9 @@ import com.hy.core.view.JspView;
 
 @Controller
 @At("/login")
-public class LoginController {
+public class LoginController extends AbstractController {
 
-	@At("/")
+	@At
 	public ModelAndView index(HttpServletRequest req, HttpServletResponse resp){
 		return new ModelAndView(new JspView("login.jsp"),null);
 	}

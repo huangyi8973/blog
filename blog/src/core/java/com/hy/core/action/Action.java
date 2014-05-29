@@ -6,61 +6,72 @@ import com.hy.core.pub.HttpMethod;
 
 public class Action {
 
-	private String _url;
-	private Class<?> _controllerCls;
-	private Method _method;
-	private HttpMethod _httpMethod;
-	private String _clsAndMethod;
+	private String url;
+	private Class<?> controllerCls;
+	private Method method;
+	private HttpMethod httpMethod;
+	private String clsAndMethod;
+	private Params params;
 	
 	public Action(String url, Class<?> controllerCls, Method method,HttpMethod httpMethod,String clsAndMethod) {
 		super();
-		this._url = url;
-		this._controllerCls = controllerCls;
-		this._method = method;
-		this._httpMethod = httpMethod;
-		this._clsAndMethod = clsAndMethod;
+		this.url = url;
+		this.controllerCls = controllerCls;
+		this.method = method;
+		this.httpMethod = httpMethod;
+		this.clsAndMethod = clsAndMethod;
 	}
 
 	
 	public String getClsAndMethod() {
-		return _clsAndMethod;
+		return clsAndMethod;
 	}
 
 
 	public void setClsAndMethod(String _clsAndMethod) {
-		this._clsAndMethod = _clsAndMethod;
+		this.clsAndMethod = _clsAndMethod;
 	}
 
 
 	public String getUrl() {
-		return _url;
+		return url;
 	}
 
 	public void setUrl(String url) {
-		this._url = url;
+		this.url = url;
 	}
 
 	public Class<?> getControllerCls() {
-		return _controllerCls;
+		return controllerCls;
 	}
 
 	public void setControllerCls(Class<?> controllerCls) {
-		this._controllerCls = controllerCls;
+		this.controllerCls = controllerCls;
 	}
 
 	public Method getMethod() {
-		return _method;
+		return method;
 	}
 
 	public void setMethod(Method method) {
-		this._method = method;
+		this.method = method;
+	}
+
+
+	public Params getParams() {
+		return params;
+	}
+
+
+	public void setParams(Params params) {
+		this.params = params;
 	}
 
 
 	@Override
 	public String toString() {
-		return "Action [_url=" + _url + ", _httpMethod=" + _httpMethod
-				+ ", _clsAndMethod=" + _clsAndMethod + "]";
+		return "Action [_url=" + url + ", _httpMethod=" + httpMethod
+				+ ", _clsAndMethod=" + clsAndMethod + "]";
 	}
 
 
